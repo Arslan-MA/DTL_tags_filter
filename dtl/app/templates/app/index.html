@@ -1,0 +1,807 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <style>
+        h3 {
+            margin-top: 20px;
+        }
+        .background {
+            background-color: #D3D3D3;
+            height: 50px;
+        }
+        .background-big {
+            background-color: #D3D3D3;
+            height: 170px;
+        }
+        .example {
+            padding-left: 10px;
+            padding-top: 15px;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+</head>
+<body>
+
+    <h1>Теги</h1>
+
+    <div style="width: 300px;">
+        <h3>Тег <b>verbatim</b></h3>
+        <p style="text-align: justify;">
+            Останавливает механизм шаблонов от рендеринга содержимого этого тега блока.
+            Часто используется для того, чтобы разрешить слой шаблонов JavaScript,
+            который сталкивается с синтаксисом Django.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background" style="height: 80px;">
+            <p class="example">
+                <b> &#123;&percnt; verbatim &percnt;&#125; <br>
+                        &ensp;&ensp;&#123;&#123; value &#125;&#125;<br>
+                    &#123;&percnt; endverbatim &percnt;&#125;&#125;</b>
+            </p>
+        </div>
+
+        <p>Пример без тега <b>verbatim</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ value }}
+            </p>
+        </div>
+
+        <p>Пример с тегом <b>verbatim</b>:</p>
+        <div class="background">
+            <p class="example">
+                {% verbatim %} {{ value }} {% endverbatim %}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Тег <b>debug</b></h3>
+        <p style="text-align: justify;">
+            Выводит целую кучу отладочной информации, включая текущий контекст и импортированные модули.
+            &#123;&percnt; debug &percnt;&#125; ничего не выводит, если параметр DEBUG равен False.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %} {% debug %} {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без тега <b>debug</b>:</p>
+        <div class="background">
+            <p class="example">
+            </p>
+        </div>
+
+        <p>Пример с тегом <b>debug</b>:</p>
+        <div class="background-big" style="width: 400px;">
+            <p class="example">
+                <textarea onclick="this.focus();this.select()" style="width: 350px;
+                                                                      height: 100px;">
+                    {% filter force_escape %} {% debug %} {% endfilter %}
+                </textarea>
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Тег <b>include</b></h3>
+        <p style="text-align: justify;">
+            Загружает шаблон и отображает его с текущим контекстом.
+            Это способ «включения» других шаблонов в шаблон.
+            Имя шаблона может быть переменной или жестко закодированной
+            (заключенной в кавычки) строкой в одинарных или двойных кавычках.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %} {% include "app/inc.html" %} {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без тега <b>include</b>:</p>
+        <div class="background">
+            <p class="example">
+                My code....
+            </p>
+        </div>
+
+        <p>Пример с тегом <b>include</b>:</p>
+        <div class="background">
+            <p class="example">
+                My code.... {% include "app/urlize.html" %}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Тег <b>ifchanged</b></h3>
+        <p style="text-align: justify;">
+            Проверьте, изменилось ли значение с последней итерации цикла.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %} {% ifchanged %} ... {% endifchanged %} {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без тега <b>ifchanged</b>:</p>
+        <div class="background-big" style="height: 500px;">
+            <p class="example">
+                {% for food in foods %}
+                    <h3>{{ food.category }}</h3>
+                    <p>{{ food.name }}</p>
+                {% endfor %}
+            </p>
+        </div>
+
+        <p>Пример с тегом <b>ifchanged</b>:</p>
+        <div class="background-big" style="height: 500px;">
+            <p class="example">
+                {% for food in foods %}
+                    {% ifchanged food.category %}
+                        <h3>{{ food.category }}</h3>
+                    {% endifchanged %}
+                    <p>{{ food.name }}</p>
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Тег <b>load</b></h3>
+        <p style="text-align: justify;">
+            Загружает настраиваемый набор тегов шаблона.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %} {% load static %} {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без тега <b>load</b>:</p>
+        <div class="background">
+            <p class="example">
+                <span class="block">my block</span>
+            </p>
+        </div>
+
+        <p>Пример с тегом <b>load</b>:</p>
+        <div class="background">
+            <p class="example">
+                <span class="red_block">my block</span>
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Тег <b>with</b></h3>
+        <p style="text-align: justify;">
+            Кэширует сложную переменную под более простым именем.
+            Это полезно при многократном доступе к «дорогостоящему» методу
+            (например, тот, который делает запрос в базу данных).
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background" style="width: 400px;">
+            <p class="example">
+                <b>{% verbatim %} {% with firstname="Stalikken" %} .... {% endwith %} {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без тега <b>with</b>:</p>
+        <div class="background">
+            <p class="example">
+                Hello
+            </p>
+        </div>
+
+        <p>Пример с тегом <b>with</b>:</p>
+        <div class="background">
+            <p class="example">
+                {% with firstname="Stalikken" %}
+                    Hello {{ firstname }}
+                {% endwith %}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Тег <b>autoescape</b></h3>
+        <p style="text-align: justify;">
+            Управляет текущим автоматическим экранированием.
+            Этот тег принимает в качестве аргумента либо on, либо off и определяет,
+            действует ли автоматическое экранирование внутри блока.
+            Блок закрывается конечным тегом endautoescape.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background" style="width: 400px;">
+            <p class="example">
+                <b>{% verbatim %} {% autoescape on %} {{ blurb }} {% endautoescape %}} {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без тега <b>autoescape</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ blurb }}
+            </p>
+        </div>
+
+        <p>Пример с тегом <b>autoescape</b>:</p>
+        <div class="background">
+            <p class="example">
+                {% autoescape off %} {{ blurb }} {% endautoescape %}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Тег <b>lorem</b></h3>
+        <p style="text-align: justify;">
+            Отображает случайный латинский текст «lorem ipsum».
+            Это полезно для предоставления образцов данных в шаблонах.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background" style="width: 600px;">
+            <p class="example">
+                <b>{% verbatim %} {% autoescape on %} {% lorem 2 w random %} {% endautoescape %}} {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без тега <b>lorem</b>:</p>
+        <div class="background">
+            <p class="example">
+            </p>
+        </div>
+
+        <p>Пример с тегом <b>lorem</b>:</p>
+        <div class="background">
+            <p class="example">
+                {% lorem 2 w random %}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <h1>Фильтры</h1>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>force_escape</b></h3>
+        <p style="text-align: justify;">
+            Применяет экранирование HTML к строке.
+            Этот фильтр применяется немедленно и возвращает новую строку с экранированием.
+            Это полезно в редких случаях, когда требуется многократное экранирование
+            или вы хотите применить другие фильтры к результатам экранирования.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %} {{ value|linebreaks|force_escape }} {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>title</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ value }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>title</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ value|linebreaks|force_escape }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>linebreaksbr</b></h3>
+        <p style="text-align: justify;">
+            Принимает список словарей и возвращает этот список,
+            отсортированный в обратном порядке по ключу, указанному в аргументе.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background" style="width: 400px;
+        height: 80px;">
+            <p class="example">
+                <b>{% verbatim %}
+                       {% for food in foods|dictsortreversed:'category' %}<br>
+                           &ensp;&ensp;{{ food.name }}, {{ food.category }}<br>
+                       {% endfor %}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>dictsortreversed</b>:</p>
+        <div class="background-big">
+            <p class="example">
+                <ul>
+                    {% for food in foods %}
+                        <li>{{ food.name }}, {{ food.category }} </li>
+                    {% endfor %}
+                </ul>
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>dictsortreversed</b>:</p>
+        <div class="background-big">
+            <p class="example">
+                <ul>
+                    {% for food in foods|dictsortreversed:'category' %}
+                        <li>{{ food.name }}, {{ food.category }} </li>
+                    {% endfor %}
+                </ul>
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>linebreaksbr</b></h3>
+        <p style="text-align: justify;">
+            Преобразует все новые строки в фрагменте обычного текста в разрывы строк HTML (br).
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ value|linebreaksbr }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>linebreaksbr</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ value }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>linebreaksbr</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ value|linebreaksbr }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>urlize</b></h3>
+        <p style="text-align: justify;">
+            Преобразует URL-адреса и адреса электронной почты в тексте в кликабельные ссылки.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ url|urlize }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>urlize</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ url }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>urlize</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ url|urlize }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>safeseq</b></h3>
+        <p style="text-align: justify;">
+            Применяет фильтр safe к каждому элементу последовательности.
+            Используется в сочетании с другими фильтрами, работающими с последовательностями, например join.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ foods|safeseq|join:", " }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>safeseq</b>:</p>
+        <div class="background-big">
+            <p class="example">
+                <ul>
+                    {{ foods }}
+                </ul>
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>safeseq</b>:</p>
+        <div class="background-big">
+            <p class="example">
+                {{ foods|safeseq|join:"<br>" }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>default</b></h3>
+        <p style="text-align: justify;">
+            Если значение равно False, используется заданное значение по умолчанию.
+            В противном случае используется значение. <br><br> <b>value_default : пустая строка</b>
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ value_default|default:"nothing" }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>default</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ value_default }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>default</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ value_default|default:"nothing" }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>safe</b></h3>
+        <p style="text-align: justify;">
+            Помечает строку как не требующую дальнейшего экранирования HTML перед выводом.
+            Когда автоэскейпинг выключен, этот фильтр не действует.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ blurb|safe }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>safe</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ blurb }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>safe</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ blurb|safe }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>unordered_list</b></h3>
+        <p style="text-align: justify;">
+            Рекурсивно принимает самовложенный список и возвращает
+            неупорядоченный список HTML – БЕЗ открывающих и закрывающих тегов ul.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ var|unordered_list }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>unordered_list</b>:</p>
+        <div class="background" style="width: 400px;">
+            <p class="example">
+                {{ var }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>unordered_list</b>:</p>
+        <div class="background-big">
+            <p class="example">
+                {{ var|unordered_list }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>truncatewords_html</b></h3>
+        <p style="text-align: justify;">
+            Аналогичен truncatewords, за исключением того, что он знает о тегах HTML.
+            Любые теги, открытые в строке и не закрытые до точки усечения, закрываются сразу после усечения.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ value|truncatewords_html:2 }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>truncatewords_html</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ value }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>truncatewords_html</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ value|truncatewords_html:2 }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>urlencode</b></h3>
+        <p style="text-align: justify;">
+            Экранирует значение для использования в URL.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ url|urlencode }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>urlencode</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ url }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>urlencode</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ url|urlencode }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>rjust</b></h3>
+        <p style="text-align: justify;">
+            Выравнивает вправо значение в поле заданной ширины.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ value|rjust:"20" }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>rjust</b>:</p>
+        <div class="background">
+            <p class="example">
+                "{{ value }}"
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>rjust</b>:</p>
+        <div class="background">
+            <p class="example">
+                "{{ value|rjust:"20" }}"
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>filesizeformat</b></h3>
+        <p style="text-align: justify;">
+            Форматирует значение как «человекочитаемый» размер файла (т.е. '13 KB', '4.1 MB', '102 bytes' и т.д.).
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ value_num|filesizeformat }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>filesizeformat</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ value_num }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>filesizeformat</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ value_num|filesizeformat }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>wordwrap</b></h3>
+        <p style="text-align: justify;">
+            Обертывает слова на заданную длину строки.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ text|wordwrap:10  }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>wordwrap</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ text }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>wordwrap</b>:</p>
+        <div class="background" style="height: 80px">
+            <p class="example">
+                {{ text|wordwrap:10|linebreaksbr }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>join</b></h3>
+        <p style="text-align: justify;">
+            Объединяет список со строкой, как в Python str.join(list)
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ list|join:" // " }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>join</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ list }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>join</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ list|join:" // " }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>center</b></h3>
+        <p style="text-align: justify;">
+            Центрирует значение в поле заданной ширины.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ text|center:"30" }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>center</b>:</p>
+        <div class="background">
+            <p class="example">
+                "{{ text }}"
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>center</b>:</p>
+        <div class="background">
+            <p class="example">
+               "{{ text|center:"30" }}"
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+    <div style="width: 300px;">
+        <h3>Фильтр <b>divisibleby</b></h3>
+        <p style="text-align: justify;">
+            Возвращает True, если значение делится на аргумент.
+        </p>
+
+        <p>Синтаксис</p>
+        <div class="background">
+            <p class="example">
+                <b>{% verbatim %}
+                       {{ number|divisibleby:"3" }}
+                   {% endverbatim %}</b>
+            </p>
+        </div>
+
+        <p>Пример без фильтра <b>divisibleby</b>:</p>
+        <div class="background">
+            <p class="example">
+                {{ number }}
+            </p>
+        </div>
+
+        <p>Пример с фильтром <b>divisibleby</b>:</p>
+        <div class="background">
+            <p class="example">
+               {{ number|divisibleby:"3" }}
+            </p>
+        </div>
+    </div>
+    <div style="background-color: black; height: 5px;"></div>
+
+</body>
+</html>
